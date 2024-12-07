@@ -1,4 +1,4 @@
-# Multi-Stage Build Dockerfile for Portainer CE
+# Optimized Multi-Stage Build Dockerfile for Portainer CE
 
 # Stage 1: Builder
 FROM alpine:latest AS builder
@@ -9,9 +9,9 @@ RUN apk add --no-cache \
     tar \
     jq
 
-# Fetch the latest version of Portainer CE from GitHub
+# Fetch the latest version of Portainer CE from GitHub and extract the binary
 WORKDIR /build
-RUN LATEST_VERSION=$(curl -s https://api.github.com/repos/portainer/portainer/releases/latest | jq -r '.tag_name') && \
+RUN LATEST_VERSION=$(curl -sSL https://api.github.com/repos/portainer/portainer/releases/latest | jq -r '.tag_name') && \
     curl -fSL https://github.com/portainer/portainer/releases/download/${LATEST_VERSION}/portainer-${LATEST_VERSION#v}-linux-amd64.tar.gz \
     -o portainer.tar.gz && \
     tar -xzf portainer.tar.gz
